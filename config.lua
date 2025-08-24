@@ -1,7 +1,7 @@
 Config = {}
 
-Config.UseESX = true						-- Use ESX Framework
-Config.UseQBCore = false					-- Use QBCore Framework (Ignored if Config.UseESX = true)
+Config.UseESX = false						-- Use ESX Framework
+Config.UseQBCore = true						-- Use QBCore Framework (Ignored if Config.UseESX = true)
 Config.PoliceAlertCooldown = 30             -- How long, in seconds for the police alert cooldown
 
 RegisterNetEvent('angelicxs-MDetector:CustomDisptach')
@@ -92,55 +92,81 @@ end)
 
 Config.Detectors = {
 
-	MRPD = {
-		{	
-			coords = {466.38, -994.68, 30.46}, detectRadius = 0.8, soundRadious = 10, timer = 2000, sound = 'VEHICLES_HORNS_AMBULANCE_WARNING',
-			jobsExempt = {
-				["police"] = 0,
-				["ambulance"] = 0,
-			},
-			UseMainList = true,
-		},
-		{
-			coords = {466.71, -992.46, 30.46}, detectRadius = 1.8, soundRadious = 10, timer = 2000, sound = 'VEHICLES_HORNS_AMBULANCE_WARNING',
-			jobsExempt = {
-				["police"] = 0,
-				["ambulance"] = 0,
-			},
-			UseMainList = true,
-		},
-		{
-			coords = {478.62, -986.51, 29.96}, detectRadius = 1.8, soundRadious = 10, timer = 2000, sound = 'VEHICLES_HORNS_AMBULANCE_WARNING',
-			jobsExempt = {
-				["police"] = 0,
-				["ambulance"] = 0,
-			},
-			UseMainList = true,
-		},
-		{
-			coords = {479.88, -986.61, 29.96}, detectRadius = 1.8, soundRadious = 10, timer = 2000, sound = 'VEHICLES_HORNS_AMBULANCE_WARNING',
-			jobsExempt = {
-				["police"] = 0,
-				["ambulance"] = 0,
-			},
-			UseMainList = true,
-		},
-		{
-			coords = {475.94, -991.36, 25.47}, detectRadius = 1.8, soundRadious = 10, timer = 2000, sound = 'VEHICLES_HORNS_AMBULANCE_WARNING',
-			jobsExempt = {
-				["police"] = 0,
-				["ambulance"] = 0,
-			},
-			UseMainList = true,
-		},
-	},
- 	UpperPillbox = {
-		{	-- main doors
-			coords = {299.7238, -584.8970, 43.2841}, detectRadius = 0.8, soundRadious = 10, timer = 2000, sound = 'VEHICLES_HORNS_AMBULANCE_WARNING',
-			items = {
-				"water",
-			},
+	-- MRPD = {
+	-- 	{	
+	-- 		coords = {466.38, -994.68, 30.46}, detectRadius = 0.8, soundRadious = 10, timer = 2000, sound = 'VEHICLES_HORNS_AMBULANCE_WARNING',
+	-- 		jobsExempt = {
+	-- 			["police"] = 0,
+	-- 			["ambulance"] = 0,
+	-- 		},
+	-- 		UseMainList = true,
+	-- 	},
+	-- 	{
+	-- 		coords = {466.71, -992.46, 30.46}, detectRadius = 1.8, soundRadious = 10, timer = 2000, sound = 'VEHICLES_HORNS_AMBULANCE_WARNING',
+	-- 		jobsExempt = {
+	-- 			["police"] = 0,
+	-- 			["ambulance"] = 0,
+	-- 		},
+	-- 		UseMainList = true,
+	-- 	},
+	-- 	{
+	-- 		coords = {478.62, -986.51, 29.96}, detectRadius = 1.8, soundRadious = 10, timer = 2000, sound = 'VEHICLES_HORNS_AMBULANCE_WARNING',
+	-- 		jobsExempt = {
+	-- 			["police"] = 0,
+	-- 			["ambulance"] = 0,
+	-- 		},
+	-- 		UseMainList = true,
+	-- 	},
+	-- 	{
+	-- 		coords = {479.88, -986.61, 29.96}, detectRadius = 1.8, soundRadious = 10, timer = 2000, sound = 'VEHICLES_HORNS_AMBULANCE_WARNING',
+	-- 		jobsExempt = {
+	-- 			["police"] = 0,
+	-- 			["ambulance"] = 0,
+	-- 		},
+	-- 		UseMainList = true,
+	-- 	},
+	-- 	{
+	-- 		coords = {475.94, -991.36, 25.47}, detectRadius = 1.8, soundRadious = 10, timer = 2000, sound = 'VEHICLES_HORNS_AMBULANCE_WARNING',
+	-- 		jobsExempt = {
+	-- 			["police"] = 0,
+	-- 			["ambulance"] = 0,
+	-- 		},
+	-- 		UseMainList = true,
+	-- 	},
+	-- },
+ 	-- UpperPillbox = {
+	-- 	{	-- main doors
+	-- 		coords = {299.7238, -584.8970, 43.2841}, detectRadius = 0.8, soundRadious = 10, timer = 2000, sound = 'VEHICLES_HORNS_AMBULANCE_WARNING',
+	-- 		UseMainList = true,
+	-- 		entity = true,
+	-- 		heading = 67.0,
+	-- 		items = {
+	-- 			"water",
+	-- 		},
 	
+	-- 	},
+	-- },
+	RHPD = {
+		{	-- left door
+			coords = {-401.31, -351.5, 32.4}, detectRadius = 0.8, soundRadious = 10, timer = 2000, sound = 'VEHICLES_HORNS_AMBULANCE_WARNING',
+			id = 1,
+			UseMainList = true,
+			entity = true,
+			heading = 350.84,
+		},
+		{	-- right door
+			coords = {-389.25, -331.61, 32.4}, detectRadius = 0.8, soundRadious = 10, timer = 2000, sound = 'VEHICLES_HORNS_AMBULANCE_WARNING',
+			id = 2,
+			UseMainList = true,
+			entity = true,
+			heading = 231.61,
+		},
+		{	-- back right door
+			coords = {-400.67, -324.25, 32.4}, detectRadius = 0.8, soundRadious = 10, timer = 2000, sound = 'VEHICLES_HORNS_AMBULANCE_WARNING',
+			id = 3,
+			UseMainList = true,
+			entity = true,
+			heading = 142.75,
 		},
 	},
 

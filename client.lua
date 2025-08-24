@@ -4,9 +4,11 @@ PlayerData = nil
 PlayerJob = nil
 PlayerGrade = nil
 
-local DetectorSpawn = false
-local DetectorEntity
+--local DetectorSpawn = false
+local DetectorSpawn = {}
+local DetectorEntity = {}
 local CooldownTimer = false
+local searchOnCoolDown = false
 
 CreateThread(function()
 	if Config.UseESX then
@@ -50,32 +52,33 @@ CreateThread(function()
 end)
 
 CreateThread(function()
+    local sleep
     while true do
-        local sleep = 3000
+        sleep = 3000
         local nearDetector = false
         local playerCoords = GetEntityCoords(PlayerPedId())
         for detectorName, detectorLocation in pairs(Config.Detectors) do
             for index, detector in pairs(detectorLocation) do
                 local distance = #(playerCoords - vector3(detector.coords[1],detector.coords[2],detector.coords[3]))
-                if distance <= 20 then
-                    if detector.entity and not DetectorSpawn then
-                        DetectorSpawn = true
+                if distance <= 10 then
+                    if detector.entity and not DetectorSpawn[detector.id] then
+                        DetectorSpawn[detector.id] = true
                         CreateMetalDetector(detector)
                     end
                     sleep = 1000
                     if distance <= (detector.detectRadius*8) then
                         sleep = 5
-                        if distance <= detector.detectRadius then
+                        if distance <= detector.detectRadius and not searchOnCoolDown then
                             sleep = detector.timer
                             Search(detector)
                             break
                         end
                     end
-                elseif detector.entity and DoesEntityExist(DetectorEntity) and DetectorSpawn then
-                    if distance > 20 then
-                        DeleteObject(DetectorEntity)
-                        DeleteEntity(DetectorEntity)
-                        DetectorSpawn = false
+                elseif detector.entity and DoesEntityExist(DetectorEntity[detector.id]) and DetectorSpawn[detector.id] then
+                    if distance > 30 then
+                        DeleteObject(DetectorEntity[detector.id])
+                        DeleteEntity(DetectorEntity[detector.id])
+                        DetectorSpawn[detector.id] = false
                     end
                 end
             end
@@ -90,10 +93,10 @@ function CreateMetalDetector(detector)
     while not HasModelLoaded(hash) do
         Wait(10)
     end
-    DetectorEntity = CreateObject(hash, detector.coords[1], detector.coords[2], (detector.coords[3]-1), 0, 0, 0)
-    SetEntityHeading(DetectorEntity, detector.heading)
-    FreezeEntityPosition(DetectorEntity, true)
-    SetEntityInvincible(DetectorEntity, true)
+    DetectorEntity[detector.id] = CreateObject(hash, detector.coords[1], detector.coords[2], (detector.coords[3]-1), 0, 0, 0)
+    SetEntityHeading(DetectorEntity[detector.id], detector.heading)
+    FreezeEntityPosition(DetectorEntity[detector.id], true)
+    SetEntityInvincible(DetectorEntity[detector.id], true)
     SetModelAsNoLongerNeeded(hash)
 end
 
@@ -151,6 +154,7 @@ function Search(detector)
             end
         end
         if hasItem then
+            searchOnCoolDown = true
             TriggerServerEvent('angelicxs-MDetector:Server:SoundPlayer', detector)
             if not CooldownTimer then
                 PoliceAlert()
@@ -177,14 +181,24 @@ function PoliceAlert()
     CooldownTimer = true
     local time = Config.PoliceAlertCooldown
     TriggerEvent('angelicxs-MDetector:CustomDisptach')
-    while true do
-        Wait(1000)
-        time = time-1
-        if time <= 0 then
-            break
+    CreateThread(function()
+        while true do
+            Wait(1000)
+            time = time-1
+            if time <= 0 then
+                break
+            end
         end
-    end
-    CooldownTimer = false
+        CooldownTimer = false
+    end)
+    -- while true do
+    --     Wait(1000)
+    --     time = time-1
+    --     if time <= 0 then
+    --         break
+    --     end
+    -- end
+    -- CooldownTimer = false
 end
 
 RegisterNetEvent('angelicxs-MDetector:SoundPlayer', function(detector)
@@ -195,9 +209,20 @@ RegisterNetEvent('angelicxs-MDetector:SoundPlayer', function(detector)
     if distance <= detector.soundRadious then
         hearing = true
         PlaySoundFromCoord(soundId, detector.sound, detector.coords[1], detector.coords[2], detector.coords[3])
+        
+        if detector.entity then
+            -- SetEntityDrawOutlineColor(10, 170, 210, 200) -- set color
+            SetEntityDrawOutlineColor(255, 50, 50, 0)    -- set redish color
+            SetEntityDrawOutlineShader(0)                -- set shader
+            SetEntityDrawOutline(DetectorEntity[detector.id], true)   -- toggle it on the entity (not inside loop, just once)
+        end
     end
     if hearing then
         Wait(detector.timer)
         StopSound(soundId)
+        searchOnCoolDown = false
+        if detector.entity then
+            SetEntityDrawOutline(DetectorEntity[detector.id], false)
+        end
     end
 end)
